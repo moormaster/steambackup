@@ -59,6 +59,18 @@ function steambackup()
 			rsync -auv --delete ${arg_rsyncopts} "${abs_sourcedir}/common/${dname}/" "${abs_targetdir}/common/${dname}/"
 		done		
 	popd
+
+	pushd "${abs_targetdir}/common"
+		find -mindepth 1 -maxdepth 1 -type d | while read d
+		do
+			local dname="$( basename "$d" )"
+
+			if ! [ -d "${abs_sourcedir}/common/${dname}" ]
+			then
+				echo "$dname is not installed anymore and was NOT backed up"
+			fi
+		done
+	popd
 }
 
 function usage()
